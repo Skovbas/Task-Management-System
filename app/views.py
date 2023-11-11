@@ -46,18 +46,30 @@ def taskPage(request, id):
             logger.error("Failed data uploading")
             return render(request, "app/taskPage.html",{})
     elif request.method == "POST":
-        comment_text = request.POST["comment"]
-
-        task = get_object_or_404(Task, pk=id)
-        
-        comment = Comment(
-            comments=comment_text,
-            taskName=task,
-        )
-        
-        comment.save()
-
-        return HttpResponseRedirect(reverse("taskPage",args=[task.pk] ))
+        if "is_done" in request.POST:
+            task = Task.objects.get(pk=id)
+            
+            task.is_done = request.POST.get('is_done', False) == 'on'
+            task.save()
+            
+            return HttpResponseRedirect(reverse("taskPage", args=[task.pk]))
+        elif "comment" in request.POST:
+            comment_text = request.POST["comment"]
+            task = get_object_or_404(Task, pk=id)
+            
+            comment = Comment(
+                comments=comment_text,
+                taskName=task,
+            )
+            
+            comment.save()
+            
+            return HttpResponseRedirect(reverse("taskPage", args=[task.pk]))
+        else:
+            task = Task.objects.get(pk=id)
+            task.is_done = False
+            task.save()
+            return HttpResponseRedirect(reverse("taskPage", args=[task.pk]))
     else:
         logger.error("Failed data uploading")
         return render(request, "app/taskPage.html", {})

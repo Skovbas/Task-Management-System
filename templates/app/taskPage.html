@@ -12,7 +12,7 @@
             <br/>
             {% for task in  tasks %}
                 <div class="field">
-                    <h2>Task: {{ task.pk }}</h2>
+                    <h2>Task: {{ task.title }}</h2>
                 </div>
                 <br/>
                 <div class="row">
@@ -45,13 +45,24 @@
                             {% endif %}
                         </div>
                     </div>
+                    <form id="completeTaskForm" method="POST" action="{% url 'taskPage' task.pk %}">
+                        {% csrf_token %}
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline d-flex align-items-center">
+                                <label for="is_done" class="mr-2">Done:</label>
+                                <input type="checkbox" id="is_done" name="is_done" {% if task.is_done %}checked{% endif %}
+                                    onchange="document.getElementById('completeTaskForm').submit();">
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="form-outline">
                     <p>User: {{ task.created_by }} </p>
                 </div>
 
-                <form method="POST" action="{% url 'taskPage' task.pk %}">
+                <form method="POST" action="{% url 'taskPage' task.pk %}"> 
                     {% csrf_token %}
                     <div class="comment-section">
                         <label for="comment">Comments:</label>
