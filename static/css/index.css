@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; 
+    height: 100vh;
+}
+  
+.text-container {
+    text-align: center; 
+}
+  
+.text {
+    font-family: 'Your Cool Font', sans-serif;
+    background: linear-gradient(135deg, #2276fb, #FF1493, #FF0000);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+  
+.start {
+    text-decoration: none;
+    padding: 10px 20px;
+    display: inline-block;
+    border: 2px solid #d50101;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #8A2BE2, #FF1493, #FF0000); /* Gradient from purple to pink to red */
+    -webkit-background-clip: text;
+    color: transparent;
+    text-decoration: none;
+    background-clip: text; /* Standard property for background clip */
+    transition: background 0.3s ease, color 0.3s ease; /* Add a transition for background and color changes */
+}
+
+.start:hover {
+    background: linear-gradient(135deg, #FFA500, #FF4500, #FF0000); /* New gradient on hover */
+    color: #FFF;
+    text-decoration: none;
+}
+ 

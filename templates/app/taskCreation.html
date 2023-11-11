@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block body %}
+<section class="text-center">
+    <!-- Background image -->
+    <div class="p-5 bg-image" style="
+          background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
+          height: 300px;
+          "></div>
+  
+    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+          margin-top: -100px;
+          background: hsla(0, 0%, 100%, 0.8);
+          backdrop-filter: blur(30px);
+          position: relative; 
+          left: 5%;
+          ">
+      <div class="card-body py-5 px-md-5">
+  
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-8">
+            <h2 class="fw-bold mb-5">Create Task</h2>
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                        <input type="text" id="title" name="title" class="form-control" required/>
+                        <label class="form-label" for="title">Title</label>
+                        {% if message %}
+                          <p style="color: red"> {{ message }}</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                        <input type="datetime-local" id="due_time" name="due_time" class="form-control" />
+                        <label class="form-label" for="due_time">Due date</label>
+                        {% if date %}
+                          <p style="color: red"> {{ date }}</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-outline mb-4">
+                    <textarea id="description" name="description" class="form-control" rows="4" cols="50" required></textarea>
+                    <label class="form-label" for="description">Description</label>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <input type="text" id="category" name="category" class="form-control" />
+                        <label class="form-label" for="category">Category</label>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label for="Priority">{% trans "Priority" %}:</label>
+                        <select class="form-select form-select-lg mb-3" name="priority" id="Priority" aria-label=".form-select-lg example" >
+                            <option value="" disabled selected>{% trans "Select a priority" %}</option>
+                            {% for topic in priority %}
+                                <option value="{{ topic }}">{{ topic }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+              <input type="submit" value="Create" class="btn btn-primary btn-lg btn-block" />
+
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

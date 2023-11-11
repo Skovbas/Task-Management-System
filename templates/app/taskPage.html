@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block body %}
+    <link rel="stylesheet" href="{% static 'css/taskPage.css' %}">
+    
+    <div class="custom-container"> 
+        <div class="task-container">
+            <h2>Task Details</h2>
+            <br/>
+            {% for task in  tasks %}
+                <div class="field">
+                    <h2>Task: {{ task.pk }}</h2>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <p>Description: {{ task.description }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <p>Due Date: {{ task.due_date }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <p>Priority: {{ task.priority }} </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            <p>Date of creation: {{ task.creation_date }} </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                            {% if task.is_done == False %} 
+                                <h6 class="mb-0"><span>Status: To-Do</span></h6>
+                            {% else %}
+                                <h6 class="mb-0"><span>Status: Complited</span></h6>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-outline">
+                    <p>User: {{ task.created_by }} </p>
+                </div>
+
+                <form method="POST" action="{% url 'taskPage' task.pk %}">
+                    {% csrf_token %}
+                    <div class="comment-section">
+                        <label for="comment">Comments:</label>
+                        <textarea id="comment" name="comment" rows="4" placeholder="Enter your comments..."></textarea>
+                    </div>
+                    <div class="button-container">
+                        <input type="submit" class="btn btn-info" value="Save"/>
+                    </div>
+                </form>
+                {% endfor %}
+        </div>
+        {% for comment in comments %}
+                <div class="row mt-3">
+                    <div class="col-md-8">
+                        <div class="card p-3">
+                            <p class="reply px-4">{{ comment.comments }}</p>
+                            <div class="action d-flex justify-content-between mt-2 align-items-center">
+                                <div class="reply px-4">
+                                    <small>{{ comment.creation_date }}</small>
+                                    <small>Remove</small>
+                                    <span class="dots"></span>
+                                    <small>Reply</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
+{% endblock %}

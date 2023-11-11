@@ -20,11 +20,11 @@
             <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
             <div class="position-sticky">
                 <div class="list-group list-group-flush mx-3 mt-4">
-                    <a href="{% url 'index' %}" class="list-group-item list-group-item-action py-2 ripple active" aria-current="true">
+                    <a href="{% url 'index' %}" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
                         <i class="fas fa-tachometer-alt fa-fw me-3"></i>
                         <span>{% trans "Home" %}</span>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple">
+                    <a href="{% url 'task' %}" class="list-group-item list-group-item-action py-2 ripple">
                         <i class="fas fa-chart-area fa-fw me-3"></i>
                         <span>{% trans "Tasks" %}</span>
                     </a>
@@ -56,7 +56,7 @@
         
             <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="{% url 'index' %}">
                         <img src="/static/img/logo.jpeg" height="45" alt="MDB Logo" loading="lazy"/>
                     </a>
 
@@ -87,18 +87,5 @@
         {% block body %}
         {% endblock %}
         
-        <script>
-            const menuItems = document.querySelectorAll('.list-group-item');
-          
-            menuItems.forEach(item => {
-              item.addEventListener('click', function() {
-                menuItems.forEach(item => {
-                  item.classList.remove('active');
-                });
-
-                this.classList.add('active');
-              });
-            });
-          </script>
     </body>
 </html>

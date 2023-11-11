@@ -1,4 +1,6 @@
+from datetime import timedelta
 from django.db import models
+from django.utils import timezone 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class MyAccountManager(BaseUserManager):
@@ -27,11 +29,11 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-def get_profile_image_filepath(self):
+def get_profile_image_filepath(self, filename):
     return f'profile_images/{str(self.pk)}/{"profile_image.png"}'
 
 def get_default_profile_image():
-    return "img/logo.jpeg"
+    return "static_fldr/images/logo.png"
 # Create your models here.
 class Account(AbstractBaseUser):
     email = models.EmailField(max_length=255, verbose_name="email", unique=True)
@@ -61,3 +63,37 @@ class Account(AbstractBaseUser):
     
     def get_profile_image_filename(self):
         return str(self.profile_image)[str(self.profile_image).index(f'profile_images/{self.pk}/'):]
+    
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class Task(models.Model):
+    title = models.CharField(max_length=40, default=None)
+    description = models.TextField(default=None)
+    categories = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True,related_name="Task")
+    PRIORITY_CHOICES = [
+        ('high', 'High'),
+        ('normal', 'Normal'),
+        ('low', 'Low'),
+    ]
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='normal')
+    due_date = models.DateTimeField(default=timezone.now() + timedelta(days=60))
+    creation_date = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
+    is_done = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+    
+class Comment(models.Model):
+    comments = models.TextField(blank=True, default=None)
+    taskName = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    creation_date = models.DateTimeField(default=timezone.now)
+    
+
+    def __str__(self):
+        return f'Task - {self.taskName}, description -  {self.comments}'

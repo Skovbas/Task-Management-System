@@ -1,5 +1,16 @@
 {% extends "layout.html" %}
 
+{% load static %}
+
 {% block body %}
-    <h1>TODO</h1>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    
+    <div class="container">
+        <div class="text-container">
+          <h1 class="text">A place where work is much easier.</h1>
+          <h1 class="text">Join us with friends or find a new one here!</h1>
+        </div>
+        <a href="{% url 'login' %}" class="start">Quick Start</a>
+    </div>
+
 {% endblock %}

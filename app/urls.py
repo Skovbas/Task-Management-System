@@ -8,6 +8,9 @@ urlpatterns = [
     path('signUp', views.signUp, name="signUp"),
     path('login', views.loginview, name="login"),
     path('logout', views.logoutview, name="logout"),
+    path('NewTask', views.taskCreation, name="task"),
+    path('taskPage/<int:id>', views.taskPage, name="taskPage"),
+
     
     #language urls
     path('i18n/setlang/', set_language, name='set_language'),
