@@ -97,3 +97,30 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Task - {self.taskName}, description -  {self.comments}'
+    
+class Notification(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    
+class AdminNotification(models.Model):
+    message = models.TextField()
+    
+    def __str__(self):
+        return self.message
+    
+class AdditionInformationForUser(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
+    skills = models.TextField(blank=True, null=True)
+    short_info = models.TextField(blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    profession = models.CharField(max_length=255, blank=True, null=True)
+    facebook_link = models.CharField(max_length=255,blank=True, null=True)
+    instagram_link = models.CharField(max_length=255,blank=True, null=True)
+    github_link = models.CharField(max_length=255,blank=True, null=True)
+    linked_in = models.CharField(max_length=255,blank=True, null=True)
+
+    def __str__(self):
+        return str(self.user)
+    

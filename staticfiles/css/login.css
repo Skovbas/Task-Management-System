@@ -1,0 +1,40 @@
+form {
+    width: 23rem; 
+    position: relative; 
+    left: 10%;
+}
+
+.bg-image-vertical {
+    position: relative;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: auto 100%;
+}
+
+section {
+    padding-left: 15%;
+}
+
+.custom{
+    padding: 10%;
+    flex: 0 0 50%; 
+    max-width: 50%; 
+    color: #000;
+}
+
+.imgFormation{
+    display: block !important;
+    width: 50%
+}
+
+.imgFormation img{
+    position: relative;
+    right: 10%;
+}
+
+@media (min-width: 1025px) {
+    .h-custom-2 {
+        height: 100%;
+    }
+}

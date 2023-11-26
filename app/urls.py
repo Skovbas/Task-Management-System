@@ -10,6 +10,8 @@ urlpatterns = [
     path('logout', views.logoutview, name="logout"),
     path('NewTask', views.taskCreation, name="task"),
     path('taskPage/<int:id>', views.taskPage, name="taskPage"),
+    path('profile/<int:id>', views.userPage, name="profile"),
+    path('profileUpdate', views.updateUserInfo, name='updateUserInfo'),
 
     
     #language urls

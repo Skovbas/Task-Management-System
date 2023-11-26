@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 
-from .models import Account
+from .models import Account, AdditionInformationForUser
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(max_length=255, help_text="Required. Add a valid email address.")
@@ -68,5 +68,25 @@ class RegistrationForm(UserCreationForm):
             raise forms.ValidationError(f'Username {username} is already in use.')
         except Account.DoesNotExist:
             return username
+        
+        
+class UserAdditionInfoForm(forms.ModelForm):
+    class Meta:
+        model = AdditionInformationForUser
+        fields = (
+            'skills',
+            'short_info',
+            'phone_number',
+            'profession',
+            'facebook_link',
+            'instagram_link',
+            'github_link',
+            'linked_in',
+        )
     
-            
+class ProfileImageUpdate(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = (
+            'profile_image',
+        )

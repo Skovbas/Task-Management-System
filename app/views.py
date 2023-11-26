@@ -1,31 +1,77 @@
 from datetime import datetime
-from sqlite3 import IntegrityError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone 
+from django.utils.translation import gettext as _
 import logging
 
-
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UserAdditionInfoForm, ProfileImageUpdate
 from .models import Account, Task, Category, Comment
 
-# Create your views here.
+def updateUserInfo(request):
+    if request.method == 'POST':
+        # Handle form submission
+        user_form = UserAdditionInfoForm(request.POST)
+        profile_form = ProfileImageUpdate(request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile', id=request.user.id)
+    else:
+        # Display the form for editing
+        user_form = UserAdditionInfoForm()
+        profile_form = ProfileImageUpdate()
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+
+    return render(request, 'app/user-update.html', context)
+
+
+    
+def userPage(request, id):
+    user = Account.objects.filter(pk=id).first()
+    
+    if not user:
+        return HttpResponseNotFound("User not found")
+    
+    return render(request, 'app/userPage.html', {
+        'user': user,
+    })
+
 def index(request):
     current_user = request.user
-    if request.user.is_authenticated:
-        tasks = Task.objects.filter(created_by=current_user)
-        if tasks:
-            return render(request, "app/home.html",{
-                "tasks" : tasks,
-                "user" : current_user
-            })
-    else:
-        return render(request, "app/index.html",{})
-    
+    tasks = None 
+
+    if not request.user.is_authenticated:
+        return render(request, "app/index.html", {})
+
+    if request.method == "POST":
+        sorting_option = request.POST.get('sorting', None)
+
+        if sorting_option == 'newest':
+            tasks = Task.objects.filter(created_by=current_user).order_by("-creation_date")
+        elif sorting_option == 'High':
+            tasks = Task.objects.filter(created_by=current_user).order_by("priority")
+        elif sorting_option == 'Low':
+            tasks = Task.objects.filter(created_by=current_user).order_by("-priority")
+        elif sorting_option == 'Done':
+            tasks = Task.objects.filter(created_by=current_user).order_by("-is_done")
+
+    if tasks is None:
+        tasks = Task.objects.filter(created_by=current_user).order_by("creation_date")
+
+    return render(request, "app/home.html", {
+        "tasks": tasks,
+        "user": current_user
+    })
+
 def taskPage(request, id):
     current_user = request.user
     logger = logging.getLogger("app.views/taskPage")
@@ -162,11 +208,13 @@ def signUp(request, *args, **kwargs):
             raw_password = form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_password)
             login(request, account)
+            
             destination = kwargs.get("next")
-            if destination:
+            if destination: 
                 return redirect(destination)
             return redirect("index")
-                
+    
+    
     return render(request, "app/register.html", {
         'form' : form,
     })

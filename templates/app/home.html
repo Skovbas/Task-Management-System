@@ -4,72 +4,86 @@
 {% load i18n %}
 
 {% block body %}
-<section class="vh-100" style="background-color: #eee;margin-left: 10%">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-md-12 col-xl-10">
-  
-          <div class="card">
-            <div class="card-header p-3">
-              <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Task List</h5>
-            </div>
-            <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
-  
-              <table class="table mb-0">
-                <thead>
-                  <tr>
-                    <th scope="col">User</th>
-                    <th scope="col">Task</th>
-                    <th scope="col">Priority</th>
-                    <th scope="col">Due Date</th>
-                    <th scope="col">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for task in tasks %}
-                  <tr class="fw-normal">
-                    <th>
-                      <span class="ms-2">{{ task.created_by }}</span>
-                    </th>
-                    <td class="align-middle">
-                      {% if task.created_by == user%}
-                        <a href="{% url 'taskPage' task.pk%}">{{ task.title }}</a>
-                      {% else %}
-                        <span>{{ task.title }}</span>
-                      {% endif %}
-                    </td>
-                    <td class="align-middle">
-                      {% if task.priority == "high" %}
-                        <h6 class="mb-0"><span class="badge bg-danger">{{ task.priority }}</span></h6>
-                      {% elif task.priority == "normal" %}
-                        <h6 class="mb-0"><span class="badge bg-warning">{{ task.priority }}</span></h6>
-                      {% else %}
-                        <h6 class="mb-0"><span class="badge bg-success">{{ task.priority }}</span></h6>
-                      {% endif %}
-                    </td>
-                    <td class="align-middle">
-                        <span>{{ task.due_date }}</span>
-                    </td>
-                    <td class="align-middle">
-                        {% if task.is_done == False %} 
-                            <h6 class="mb-0"><span>To-Do</span></h6>
+  <section class="vh-100" style="background-color: #eee;margin-left: 10%">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-md-12 col-xl-10">
+            <div class="card">
+              <div class="card-header p-3 d-flex justify-content-between">
+                <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Task List</h5>
+                <form method="POST" action="{% url 'index' %}" id="sortingForm">
+                  {% csrf_token %}
+                  <label for="sorting">{% trans "Sort by" %}:</label>
+                  <select size="1" id="sorting" name="sorting" form="sortingForm">
+                    <option value='newest'>Newest</option>
+                    <option value='High'>Priority: High-Low</option>
+                    <option value='Low'>Priority: Low-High</option>
+                    <option value='Done'>Done</option>
+                  </select>
+                  <button type="submit">Submit</button>
+                </form>
+              </div>
+              <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
+    
+                <table class="table mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">User</th>
+                      <th scope="col">Task</th>
+                      <th scope="col">Categories</th>
+                      <th scope="col">Priority</th>
+                      <th scope="col">Due Date</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for task in tasks %}
+                    <tr class="fw-normal">
+                      <th>
+                        <span class="ms-2">{{ task.created_by }}</span>
+                      </th>
+                      <td class="align-middle">
+                        {% if task.created_by == user%}
+                          <a href="{% url 'taskPage' task.pk%}">{{ task.title }}</a>
                         {% else %}
-                            <h6 class="mb-0"><span>Complited</span></h6>
+                          <span>{{ task.title }}</span>
                         {% endif %}
-                    </td>
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-  
+                      </td>
+                      <td class="align-middle">
+                          <span>{{ task.categories }}</span>
+                      </td>
+                      <td class="align-middle">
+                        {% if task.priority == "high" %}
+                          <h6 class="mb-0"><span class="badge bg-danger">{{ task.priority }}</span></h6>
+                        {% elif task.priority == "normal" %}
+                          <h6 class="mb-0"><span class="badge bg-warning">{{ task.priority }}</span></h6>
+                        {% else %}
+                          <h6 class="mb-0"><span class="badge bg-success">{{ task.priority }}</span></h6>
+                        {% endif %}
+                      </td>
+                      <td class="align-middle">
+                          <span>{{ task.due_date }}</span>
+                      </td>
+                      <td class="align-middle">
+                          {% if task.is_done == False %} 
+                              <h6 class="mb-0"><span>To-Do</span></h6>
+                          {% else %}
+                              <h6 class="mb-0"><span>Complited</span></h6>
+                          {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+    
+              </div>
+              <div class="card-footer text-end p-3">
+                <a href="{% url 'task' %}" class="btn btn-primary">Add New Task</a>
+              </div>
             </div>
-            <div class="card-footer text-end p-3">
-              <a href="{% url 'task' %}" class="btn btn-primary">Add New Task</a>
-            </div>
+    
           </div>
-  
         </div>
       </div>
-    </div>
-</section>
+  </section>
 {% endblock %}

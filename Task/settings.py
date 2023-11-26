@@ -16,7 +16,7 @@ from django.utils.translation import gettext_noop
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 AUTH_USER_MODEL = 'app.Account'
 
 # Application definition
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,13 +41,17 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'app',
+    'channels',
+    'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,6 +81,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Task.wsgi.application'
+
+ASGI_APPLICATION = 'Task.asgi.application'
+
 
 
 # Database
@@ -108,6 +116,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+#Set the static root directory
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -139,7 +153,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CHANNEL_LAYERS = {
+    "default" : {"BACKEND": "channels.layers.InMemoryChannelLayer"},
+}

@@ -43,3 +43,9 @@ a {
     color: black;
     text-decoration: none;
   }
+
+#notifications {
+    position: fixed;
+    top: 8%;
+    left: 15%;
+}
